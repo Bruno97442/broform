@@ -1,0 +1,68 @@
+input {
+    &.right-border,
+    &.wrong-border {
+        transition: 0.5s ease;
+    }
+    &.right-border {
+        border: 2px solid rgb(48, 238, 48);
+        &:focus {
+            outline: 3px solid rgb(48, 138, 48);
+        }
+    }
+    &.wrong-border {
+        border: 2px solid rgb(235, 140, 140);
+        &:focus {
+            outline: 3px solid rgb(235, 140, 140);
+        }
+    }
+}
+.d--none {
+    display: none;
+}
+
+input[data-empty="false"] + div span.empty ~ span {
+    display: none;
+}
+
+[class^="alertbubble"] {
+    border-radius: 5px;
+    position: relative;
+    padding: 0.5rem;
+    position: "relative";
+    margin: -0.5rem 0 0.5rem 0;
+    left: "0";
+    top: "100%";
+    background-color: #eb8c8c;
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 23%;
+        bottom: 100%;
+        border-bottom: 10px solid #eb8c8c;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+    }
+}
+
+span.check::before {
+    display: inline-block;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    color: #a4f130;
+    transform: translate(-100%, -40%);
+    opacity: 1;
+    animation: comeIn 0.5s ease-in;
+}
+@keyframes comeIn {
+    from {
+        transform: translate(-300%, -40%);
+        opacity: 0;
+        border: 50%;
+    }
+    to {
+        transform: translate(-100%, -40%);
+        opacity: 1;
+    }
+}
