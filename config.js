@@ -36,7 +36,7 @@ const alertMsg = {
     email: "..heu incorrecte*",
     name: "..des caractères alphabétiques*",
     text: "..alfa-numérique et ponctuation*",
-    empty: "..l'absence de vid*e"
+    empty: "..l'absence de vide"
 }
 
 export {regexObject, inputType, alertMsg}

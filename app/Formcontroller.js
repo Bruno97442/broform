@@ -4,6 +4,10 @@ import { Csscompiler } from "./Csscompiler.js";
 import { FormEntity } from "./Formentity.js";
 import { InputAlert } from "./Inputalert.js";
 
+
+/**
+  * @class FormController
+  */
 export class FormController {
 
     /**
@@ -32,34 +36,50 @@ export class FormController {
 
     formObject
 
-
-
-
     /**
-     * 
-     * @param {string} formSelector 
-     */
-    /**
-     * 
-     * @param {string} formSelector DomSelector
-     * @param {string} event Eventlistener event
-     * @param {boolean} alertMsgStyle "yes" | "no"
-     */
-    constructor(formSelector = "form", event = 'keyup', alertMsgStyle = "yes") {
-        this.form = document.querySelector(formSelector);
+      * @constructor
+      * @param {HTMLFormElement} form 
+      * @param {string} event Eventlistener event default : "keyup"
+      * @param {boolean} alertMsgStyle "yes" | "no" default : "yes"
+      */
+    constructor(form, event = 'keyup', alertMsgStyle = "yes") {
+        this.form = form;
         this.event = event;
         this.inputs = Array.from(this.form.querySelectorAll(`${formSelector} input[name]`))
         this.regexObject = regexObject
         this.inputType = inputType
-        console.log(alertMsgStyle)
         if (alertMsgStyle === "yes") {
             this.cssStyle = new Csscompiler()
             this.cssStyle.createStyleSheet()
-            console.log('hé')
         }
-
-
     }
+
+    /**
+     * enclenche le controle
+     */
+    run() {
+
+        // gestion de la soumission
+        this.form.addEventListener("submit", e => {
+            this.readyToSendForm = this.formController()
+
+            if (this.readyToSendForm) {
+                this.formObject = new FormEntity(document.querySelector('form'))
+            }else{
+                e.preventDefault();
+            }
+        })
+
+        // gestion des controle
+        this.inputs.forEach(input => {
+            input.alert = new InputAlert(input)
+            input.addEventListener(this.event, e => {
+                e.stopPropagation();
+                this.fieldController(input)
+            })
+        })
+    }
+
     /**
      * 
      * @return {boolean} formulaire bien rempli
@@ -93,27 +113,6 @@ export class FormController {
         return state.every(x => x)
     }
 
-    run() {
-
-        // gestion de la soumission
-        this.form.addEventListener("submit", e => {
-            e.preventDefault();
-            this.readyToSendForm = this.formController()
-
-            if (this.readyToSendForm) this.formObject = new FormEntity(document.querySelector('form'))
-            console.log(this.formObject)
-        })
-
-        // gestion des controle
-        this.inputs.forEach(input => {
-            input.alert = new InputAlert(input)
-            input.addEventListener(this.event, e => {
-                e.stopPropagation();
-                this.fieldController(input)
-            })
-        })
-    }
 }
 
-// let formEntity = new FormEntity(document.querySelector('form'));
 

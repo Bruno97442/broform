@@ -145,10 +145,6 @@ export class InputAlert {
         checkMark.style.position = "relative"
 
         this.input.after(checkMark)
-        console.log(inputPos.height)
-
-
-
 
         return checkMark
     }
