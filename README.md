@@ -1,5 +1,5 @@
 # broform
-form user helper app
+form user helper app like a brother does !!
 
 Insérer le lien cdn et la class ".broform" dans la page pour que l'api affiche des message afin de facilité le remplissage de formulaire par l'utilisateur
 
