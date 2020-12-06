@@ -14,7 +14,7 @@ const regexObject = {
     hyp: [/-/],
     num: [/\d+/, /\D+/],
     alu: [/[\w-]+/],
-    spe: [/^[&#\\\-çà@$£%*µ,?;.~:\/!§]+$/],
+    spe: [/[&#\\\-çà@$£%*µ,?;.~:\/!§]+/],
     mi3: [/.{3}/],
     mi8: [/.{8}/],
     email: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/],
@@ -25,18 +25,18 @@ const regexObject = {
 
 const alertMsg = {
     bubbleStart: "Il faut au moins :",
-    low: "..une minuscule*",
-    upp: "..une majuscule*",
-    hyp: "..tiret*",
-    num: "..un chiffre*",
-    alu: "..alfa-numérique uniquement*",
-    spe: "..un caractère spéciaux*",
-    mi3: "..3 caractères minimum*",
-    mi8: "..8 caractères minimum*",
-    email: "..heu incorrecte*",
-    name: "..des caractères alphabétiques*",
-    text: "..alfa-numérique et ponctuation*",
-    empty: "..l'absence de vid*e"
+    low: "..une minuscule",
+    upp: "..une majuscule",
+    hyp: "..tiret",
+    num: "..un chiffre",
+    alu: "..alfa-numérique uniquement",
+    spe: "..un caractère spéciaux",
+    mi3: "..3 caractères minimum",
+    mi8: "..8 caractères minimum",
+    email: "..heu incorrecte",
+    name: "..des caractères alphabétiques",
+    text: "..alfa-numérique et ponctuation",
+    empty: "..l'absence de vide"
 }
 
 export {regexObject, inputType, alertMsg}

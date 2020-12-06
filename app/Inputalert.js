@@ -145,17 +145,13 @@ export class InputAlert {
         checkMark.style.position = "relative"
 
         this.input.after(checkMark)
-        console.log(inputPos.height)
-
-
-
 
         return checkMark
     }
 
     /**
-     * 
-     * @param {string} coloring boolean "right" | "wrong"
+     * insert les classes de bordure ou les enleve
+     * @param {string} coloring boolean "right" | "wrong" | any
      */
     fieldPainter(coloring = "") {
         let tab = ['right-border', 'wrong-border']
