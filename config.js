@@ -3,7 +3,8 @@ const inputType = {
     number: 'empty num',
     password: 'empty low upp spe mi8',
     email: "empty email",
-    address: "empty text mi8"
+    address: "empty text mi8",
+    date: "empty"
 
 }
 const regexObject = {
@@ -14,8 +15,7 @@ const regexObject = {
     hyp: [/-/],
     num: [/\d+/, /\D+/],
     alu: [/[\w-]+/],
-    // spe: [/[&#\\\-çà@$£%*µ,?;.~:\/!§]+/],
-    spe: [/\D/],
+    spe: [/[&#\\\-çà@$£%*µ,?;.~:\/!§]+/],
     mi3: [/.{3}/],
     mi8: [/.{8}/],
     email: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/],

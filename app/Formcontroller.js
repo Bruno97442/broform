@@ -22,14 +22,14 @@ export class FormController {
     }
 
     /**
-     * @var {string} formSelector
+     * @var {HTMLFormElement} form
      */
-    _formSelector;
-    get formSelector() {
-        return this._formSelector;
+    _form;
+    get form() {
+        return this._form;
     }
-    set formSelector(value) {
-        this._formSelector = value;
+    set form(value) {
+        this._form = value;
     }
 
     readyToSendForm = [];
@@ -45,7 +45,7 @@ export class FormController {
     constructor(form, event = 'keyup', alertMsgStyle = "yes") {
         this.form = form;
         this.event = event;
-        this.inputs = Array.from(this.form.querySelectorAll('input[name]'))
+        this.inputs = Array.from(form.querySelectorAll('input[name]'))
         this.regexObject = regexObject
         this.inputType = inputType
         if (alertMsgStyle === "yes") {
@@ -61,16 +61,17 @@ export class FormController {
 
         // gestion de la soumission
         this.form.addEventListener("submit", e => {
+            e.preventDefault();
             this.readyToSendForm = this.formController()
+            console.log(this.readyToSendForm)
 
             if (this.readyToSendForm) {
                 this.formObject = new FormEntity(document.querySelector('form'))
-            }else{
-                e.preventDefault();
+                this.form.submit()
             }
         })
 
-        // gestion des controle
+        // gestion des controles
         this.inputs.forEach(input => {
             input.alert = new InputAlert(input)
             input.addEventListener(this.event, e => {
@@ -104,6 +105,7 @@ export class FormController {
 
         // pour chaque filtre ecrit l'état de validation du champs dans le dataset
         infoArray.forEach((element) => {
+     
             let match = !!input.value.match(this.regexObject[element][0])
             input.dataset[element] = match
             state.push(match)
