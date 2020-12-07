@@ -45,7 +45,7 @@ export class FormController {
     constructor(form, event = 'keyup', alertMsgStyle = "yes") {
         this.form = form;
         this.event = event;
-        this.inputs = Array.from(this.form.querySelectorAll(`${formSelector} input[name]`))
+        this.inputs = Array.from(this.form.querySelectorAll('input[name]'))
         this.regexObject = regexObject
         this.inputType = inputType
         if (alertMsgStyle === "yes") {
