@@ -1,39 +1,42 @@
-import { alertMsg } from "../config.js";
-
+/**
+ * @name InputAlert
+ * @classdesc gère l'affichage d'alert d'un input
+ */
 export class InputAlert {
 
-
+    /**
+     * @member {boolean{}}
+     */
     displayState = {
         alertBubble: false,
-        Check: false,
-        info: {}
+        CheckSign: false
     }
 
     /**
      * 
-     * @param {HTMLDivElement} alertBubble 
+     * @member {HTMLDivElement} alertBubble
+     * @description message unitaire de la bulle
      */
     alertBubble
+
     /**
-     * message unitaire de la bulle
-     * @param {HTMLSpanElement{}} alertMsgElementSet 
+     * @member {HTMLSpanElement{}} alertMsgElementSet 
+     * @description objet de la bulle
      */
     alertMsgElementSet = {}
 
-    alertMsgElementSetLast() {
-        return this.alertMsgElementSet[this.alertMsgElementSet.length - 1]
-    }
+    /**
+     * @member {HTMLSpanElement} alertCheckElement
+     * @description block de message d'info d'un input
+     */
+    alertCheckElement
 
     /**
-     * 
-     * @param {HTMLDivElement} alertCheck 
-     */
-    alertCheck
-    /**
-     * 
+     * @constructor
      * @param {HTMLInputElement} input 
+     * @param {Object} config.alertMsg 
      */
-    constructor(input) {
+    constructor(input, alertMsg) {
         this.input = input
 
         this.alertMsg = alertMsg
@@ -41,7 +44,8 @@ export class InputAlert {
     }
 
     /**
-     * transforme en tableau le dataset de l'input
+     * @method
+     * @description transforme en tableau le dataset de l'input
      * @return {Array[]} liste de deux cellules [ key, value]
      */
     datasetArray() {
@@ -56,53 +60,64 @@ export class InputAlert {
     }
 
     /**
-     * 
+     * @method
+     * @description gère l'affichage des alerts
+     * @param {Number} delay avant animation
      */
-    displayManager() {
-        let infoArray = this.datasetArray()
+    displayManager(delay = 0) {
+        let infoArray = this.datasetArray(),
+            action = () => {
 
-        // le champs est non valide
-        if (!infoArray.every(x => x.value === "true")) {
-            this.fieldPainter('wrong')
-            if (this.displayState.check) this.alertCheck.remove()
+                // le champs est non valide
+                if (!infoArray.every(x => x.value === "true")) {
+                    this.fieldPainter('wrong')
 
-            if (this.displayState.alertBubble === false) {
-                this.displayState.alertBubble = true
-                this.alertBubble = this.createBubble()
-                infoArray.forEach(info => {
-                    this.alertMsgElementSet[info.key] = this.createInfo(info.key, this.alertMsg[info.key])
-                    this.alertBubble.appendChild(this.alertMsgElementSet[info.key])
-                })
-                this.input.after(this.alertBubble)
-                this.personaMessage(infoArray)
+                    if (this.displayState.CheckSign) this.spanBoundRemove(this.alertCheckElement)
 
-            } else {
-                this.personaMessage(infoArray)
-                this.alertBubble.children
+                    if (this.displayState.alertBubble === false) {
+                        this.displayState.alertBubble = true
+                        this.alertBubble = this.createBubbleDiv(delay)
+                        infoArray.forEach(info => {
+                            this.alertMsgElementSet[info.key] = this.createInfo(info.key, this.alertMsg[info.key])
+                            this.alertBubble.appendChild(this.alertMsgElementSet[info.key])
+                        })
+                        this.input.after(this.alertBubble)
+                        this.personalizeMessage(infoArray)
+
+                    } else {
+                        this.personalizeMessage(infoArray)
+                    }
+
+                    this.displayState.CheckSign = false
+
+                    // le champs est valide
+                } else {
+                    this.fieldPainter('right')
+
+                    if (this.alertBubble !== undefined) this.boundRemove(this.alertBubble) // à animer
+
+                    this.displayState.alertBubble = false
+
+                    if (!this.displayState.CheckSign) {
+                        this.alertCheckElement = this.createCheckSpan()
+
+                        this.displayState.CheckSign = true
+
+                    }
+                }
             }
 
-            this.displayState.check = false
-
-            // le champs est valide
-        } else {
-            this.fieldPainter('right')
-
-            if (this.alertBubble !== undefined) this.alertBubble.remove() // à animer
-            this.displayState.alertBubble = false
-
-            if (!this.displayState.check) {
-                this.alertCheck = this.createCheck()
-
-                this.displayState.check = true
-
-            }
-        }
+        delay == 0 ? action() :
+            setTimeout(() => {
+                action()
+            }, delay);
     }
     /**
-     * Gére l'affichage des avertissement
+     * @method personalizeMessage 
+     * @description Gére l'affichage des conseils
      * @param {Array} datasetArray
      */
-    personaMessage(datasetArray) {
+    personalizeMessage(datasetArray) {
         // vérifier
         datasetArray.forEach(ele => {
 
@@ -119,15 +134,30 @@ export class InputAlert {
         // si oui display
     }
 
-    createBubble() {
+    /**
+     * @method createBubble
+     * @param {Number} signalOnSubmit variable delay acheminer pour formValidation
+     * @returns {HTMLDivElement}
+     */
+    createBubbleDiv(signalOnSubmit = 0) {
         let alertBubble = document.createElement('div')
-        alertBubble.classList = `alertbubble-${this.input.name}`
-  
-        alertBubble.textContent = this.alertMsg.bubbleStart
 
+        alertBubble.classList = `alertbubble-${this.input.name} boundComeIn${signalOnSubmit > 0 ? ' warningSubmit' : ""}`
+
+        alertBubble.textContent = this.alertMsg.bubbleStart
+        // pour le formvalidation
+        if (signalOnSubmit > 0) {
+            setTimeout(() => {
+                alertBubble.classList.remove('warningSubmit')
+            }, 3000);
+        }
         return alertBubble
     }
 
+    /**
+    * @method createInfo
+    * @returns {HTMLSpanElement}
+    */
     createInfo(className, message) {
         let alertSpan = document.createElement('span')
         alertSpan.classList = className
@@ -136,21 +166,36 @@ export class InputAlert {
 
         return alertSpan
     }
+    /**
+    * @method createCheckSpan
+    * @returns {HTMLSpanElement}
+    */
+    createCheckSpan() {
+        let container = document.createElement('div'),
+            checkMark = document.createElement('span'),
+            { x: inputX, y: inputY, width: inputW, height: inputH } = this.input.getBoundingClientRect(),
+            spanDim = inputH * 0.9
+        container.style.height = 0
+        container.append(checkMark)
+        this.input.after(container)
+        let { x: posX, y: posY } = checkMark.getBoundingClientRect()
+        checkMark.classList = "checkSign checkSign-comeIn"
+        checkMark.innerText = "✔️"
+        checkMark.style.left = Math.floor(posX - inputX + inputW) + "px"
+        checkMark.style.top = Math.floor(inputY - posY) + "px"
+        checkMark.style.margin = Math.floor(-inputH / 2) + "px 0"
+        checkMark.style.width = Math.floor(spanDim) + "px"
+        checkMark.style.height = Math.floor(spanDim) + "px"
+        checkMark.style.lineHeight = Math.floor(spanDim) * 0.8 + "px"
+        checkMark.style.fontSize = Math.floor(spanDim) * 0.4 + "px"
 
-    createCheck() {
-        let checkMark = document.createElement('span'),
-            inputPos = this.input.getBoundingClientRect()
-
-        checkMark.classList = "check fas fa-check fa-lg"
-        checkMark.style.position = "relative"
-
-        this.input.after(checkMark)
-
-        return checkMark
+        return container
     }
 
+
     /**
-     * insert les classes de bordure ou les enleve
+     * @method fieldPainter
+     * @description insert les classes de bordure ou les enleve
      * @param {string} coloring boolean "right" | "wrong" | any
      */
     fieldPainter(coloring = "") {
@@ -179,7 +224,32 @@ export class InputAlert {
                 tab.forEach(border => { if (this.input.classList.contains(border)) this.input.classList.remove(border) })
                 break;
         }
+    }
 
+    /**
+     * @method spanBoundRemove
+     * @description retire un élèment délicatement
+     * @param {HTMLElement} HTMLelement 
+     */
+    spanBoundRemove(HTMLelement) {
+        HTMLelement.firstChild.classList.remove("checkSign-comeIn")
+        HTMLelement.firstChild.classList.add("checkSign-boundRemove")
+        setTimeout(() => {
+            HTMLelement.remove()
+        }, 500);
+    }
+
+    /**
+     * @method boundRemove
+     * @description retire un élèment délicatement
+     * @param {HTMLElement} HTMLelement 
+     */
+    boundRemove(HTMLelement) {
+        HTMLelement.classList.remove("boundComeIn")
+        HTMLelement.classList.add("boundRemove")
+        setTimeout(() => {
+            HTMLelement.remove()
+        }, 500);
     }
 
 }
