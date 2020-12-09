@@ -79,7 +79,7 @@ export const formCss = [
     ,
     `@keyframes comeIn {
         from {
-            transform: translate(-500%, -50%);
+            transform: translate(-400%, -50%);
             opacity: 0;
         }
         to {

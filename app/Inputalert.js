@@ -106,7 +106,7 @@ export class InputAlert {
                     }
                 }
             }
-
+            // condition pour l'animation du submit
         delay == 0 ? action() :
             setTimeout(() => {
                 action()
@@ -124,7 +124,7 @@ export class InputAlert {
 
             if (this.input.dataset[ele.key] === "true") {
 
-                if (this.alertMsgElementSet[ele.key].classList.containe !== "d--none")
+                if (this.alertMsgElementSet[ele.key].classList.contains !== "d--none")
                     this.alertMsgElementSet[ele.key].classList.add("d--none")
             } else {
                 this.alertMsgElementSet[ele.key].classList.remove("d--none")
@@ -181,6 +181,8 @@ export class InputAlert {
         let { x: posX, y: posY } = checkMark.getBoundingClientRect()
         checkMark.classList = "checkSign checkSign-comeIn"
         checkMark.innerText = "✔️"
+        checkMark.style.backgroundColor = getComputedStyle(this.input).backgroundColor
+        checkMark.style.borderColor = getComputedStyle(this.input).backgroundColor
         checkMark.style.left = Math.floor(posX - inputX + inputW) + "px"
         checkMark.style.top = Math.floor(inputY - posY) + "px"
         checkMark.style.margin = Math.floor(-inputH / 2) + "px 0"

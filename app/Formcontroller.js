@@ -91,7 +91,6 @@ export class FormController {
     ) {
         this.form = form;
         this.event = event;
-        console.log(alertMsg)
         this.inputs = Array.from(form.querySelectorAll("input[name]"))
 
         this.regexObject = regexObject
