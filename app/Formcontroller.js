@@ -5,8 +5,9 @@ import { InputAlert } from "./Inputalert.js";
 
 
 /**
-  * @class FormController
-  */
+ * Assiste l'utilisateur dans le remplissage d'un formulaire
+ * @class FormController
+ */
 export class FormController {
 
     /**
@@ -20,29 +21,25 @@ export class FormController {
         this._form = value;
     }
 
+   /**
+    * @member {Boolean} readyToSendForm
+    */
+    readyToSendForm = false;
+
     /**
-     * @member {HTMLFormElement} form
+     * @member {FormEntity} formObject instance du gestionnaire de formulaire
      */
-    _form;
-    get form() {
-        return this._form;
-    }
-    set form(value) {
-        this._form = value;
-    }
-
-    readyToSendForm = [];
-
     formObject
 
     /**
       * @constructor
       * @param {HTMLFormElement} form 
-      * @param {String{}} param1.inputType 
-      * @param {Object{}} param1.regexObject 
-      * @param {Object{}} param1.alertMsg 
-      * @param {string} event Eventlistener event default : "keyup"
-      * @param {boolean} alertMsgStyle "yes" | "no" default : "yes"
+      * @param {Object.<{inputType : Object, regexObject : Object, alertMsg : Object}>} param1
+      * @param {Object.<String>} param1.inputType 
+      * @param {Object.<RegExp>} param1.regexObject 
+      * @param {Object.<Object>} param1.alertMsg 
+      * @param {String} event Eventlistener event, default : "keyup"
+      * @param {String} alertMsgStyle [alertMsgStyle : "yes"] {"yes" | "no"}
       */
     constructor(
         form,
@@ -50,25 +47,27 @@ export class FormController {
             inputType = {
                 text: "empty name mi3",
                 number: "empty num",
-                password: "empty low upp spe mi8",
+                password: "empty low upp num spe mi8",
                 email: "empty email",
                 address: "empty text mi8",
-                date: "empty"
+                date: "empty",
+                time: "empty",
+                month: "empty"
             },
             regexObject = {
-                low: [/[a-z]+/, /[^a-z]+/],
-                upp: [/[A-Z]+/, /[^A-Z]+/],
-                name: [/^[a-z A-Z-éè^éôîûñ]+$/],
-                text: [/^[a-z A-Z0-9-éè^éôîùûñà.()?'*&#+:;ç!]+$/],
-                hyp: [/-/],
-                num: [/\d+/, /\D+/],
-                alu: [/[\w-]+/],
-                spe: [/[&#\\\-çà@$£%*µ,?^¨"';.~:\/!§]+/],
-                mi3: [/.{3}/],
-                mi8: [/.{8}/],
-                email: [/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/],
-                password: [/^[\w]$/],
-                empty: [/^\w+/]
+                low: /[a-z]+/,
+                upp: /[A-Z]+/,
+                name: /^[a-z A-Z-éè^éôîûñ]+$/,
+                text: /^[a-z A-Z0-9-éè^éôîùûñà.()?'*&#+:;ç!]+$/,
+                hyp: /-/,
+                num: /\d+/,
+                alu: /[\w-]+/,
+                spe: /\W+/,
+                mi3: /.{3}/,
+                mi8: /.{8}/,
+                email: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                password: /^[\w]$/,
+                empty: /^\S+/
             },
             alertMsg = {
                 bubbleStart: "Il faut au moins :",
@@ -88,12 +87,11 @@ export class FormController {
             ,
             event = "keyup",
             alertMsgStyle = "yes"
-        }={}
+        } = {}
     ) {
-
         this.form = form;
         this.event = event;
-
+        console.log(alertMsg)
         this.inputs = Array.from(form.querySelectorAll("input[name]"))
 
         this.regexObject = regexObject
@@ -125,7 +123,7 @@ export class FormController {
 
         // gestion des controles
         this.inputs.forEach(input => {
-      
+
             input.alert = new InputAlert(input, this.alertMsg)
             input.addEventListener(this.event, e => {
                 e.stopPropagation();
@@ -161,7 +159,7 @@ export class FormController {
 
         // pour chaque filtre ecrit l'état de validation du champs dans le dataset
         infoArray.forEach((element) => {
-            let match = !!input.value.match(this.regexObject[element][0])
+            let match = !!input.value.match(this.regexObject[element])
             input.dataset[element] = match
             state.push(match)
         });
