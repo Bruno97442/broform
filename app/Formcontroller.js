@@ -1,5 +1,5 @@
 import { Csscompiler } from "./Csscompiler.js";
-// import { config } from "../config";
+import { Config } from "../config.js";
 import { FormEntity } from "./Formentity.js";
 import { InputAlert } from "./Inputalert.js";
 
@@ -21,9 +21,9 @@ export class FormController {
         this._form = value;
     }
 
-   /**
-    * @member {Boolean} readyToSendForm
-    */
+    /**
+     * @member {Boolean} readyToSendForm
+     */
     readyToSendForm = false;
 
     /**
@@ -35,11 +35,12 @@ export class FormController {
       * @constructor
       * @param {HTMLFormElement} form 
       * @param {Object.<{inputType : Object, regexObject : Object, alertMsg : Object}>} param1
-      * @param {Object.<String>} param1.inputType 
-      * @param {Object.<RegExp>} param1.regexObject 
-      * @param {Object.<Object>} param1.alertMsg 
+      * @param {Config.<String>} param1.inputType
+      * @param {Config.<RegExp>} param1.regexObject 
+      * @param {Config.<Object>} param1.alert 
+      * @param {Config.<Object>} param1.alert.message 
+      * @param {Config.alert.<String>} param1.alert.style [alertMsgStyle : "yes"] {"yes" | "no"}
       * @param {String} event Eventlistener event, default : "keyup"
-      * @param {String} alertMsgStyle [alertMsgStyle : "yes"] {"yes" | "no"}
       */
     constructor(
         form,
@@ -69,34 +70,60 @@ export class FormController {
                 password: /^[\w]$/,
                 empty: /^\S+/
             },
-            alertMsg = {
-                bubbleStart: "Il faut au moins :",
-                low: "..une minuscule",
-                upp: "..une majuscule",
-                hyp: "..tiret",
-                num: "..un chiffre",
-                alu: "..alfa-numérique uniquement",
-                spe: "..un caractère spéciaux",
-                mi3: "..3 caractères minimum",
-                mi8: "..8 caractères minimum",
-                email: "..heu incorrecte",
-                name: "..des caractères alphabétiques",
-                text: "..alfa-numérique et ponctuation",
-                empty: "..l'absence de vide"
-            }
-            ,
+            alert = {
+                message: {
+                    bubbleStart: "Il faut au moins :",
+                    low: "..une minuscule",
+                    upp: "..une majuscule",
+                    hyp: "..tiret",
+                    num: "..un chiffre",
+                    alu: "..alfa-numérique uniquement",
+                    spe: "..un caractère spéciaux",
+                    mi3: "..3 caractères minimum",
+                    mi8: "..8 caractères minimum",
+                    email: "..heu incorrecte",
+                    name: "..des caractères alphabétiques",
+                    text: "..alfa-numérique et ponctuation",
+                    empty: "..l'absence de vide"
+                },
+                style: "yes"
+            },
             event = "keyup",
-            alertMsgStyle = "yes"
         } = {}
     ) {
+
+        this.config = Config
+
+        // si l'utilisateur modifie la configuration dans le constructeur, ces valeurs écraseront la config ou la completera par défault
+        if (arguments[1]) {
+            Object.entries(arguments[1]).forEach(ele => {
+
+                typeof ele === "object" ?
+
+                    Object.entries(ele[1]).forEach(underEle =>
+
+                        typeof underEle === "object" ?
+
+                            Object.entries(underEle[1]).forEach(under2Ele =>
+
+                                this.config[ele[0]][underEle[0]][under2Ele[0]] = under2Ele[1]
+                            )
+
+                            : this.config[ele[0]][underEle[0]] = underEle[1]
+
+                    )
+                    : this.config[ele[0]] = ele[1]
+            })
+        }
+
+
         this.form = form;
         this.event = event;
         this.inputs = Array.from(form.querySelectorAll("input[name]"))
-
-        this.regexObject = regexObject
-        this.inputType = inputType
-        this.alertMsg = alertMsg
-        if (alertMsgStyle === "yes") {
+        this.regexObject = this.config.regexObject
+        this.inputType = this.config.inputType
+        this.alertMsg = this.config.alert.message
+        if (this.config.alert.style === "yes") {
 
             this.cssStyle = new Csscompiler()
             this.cssStyle.createStyleSheet()

@@ -24,22 +24,24 @@ export const Config = {
         password: /^[\w]$/,
         empty: /^\S+/
     },
-    alertMsg : {
-        bubbleStart: "Il faut au moins :",
-        low: "..une minuscule",
-        upp: "..une majuscule",
-        hyp: "..tiret",
-        num: "..un chiffre",
-        alu: "..alfa-numérique uniquement",
-        spe: "..un caractère spéciaux",
-        mi3: "..3 caractères minimum",
-        mi8: "..8 caractères minimum",
-        email: "..heu incorrecte",
-        name: "..des caractères alphabétiques",
-        text: "..alfa-numérique et ponctuation",
-        empty: "..l'absence de vide"
+    alert : {
+        message: {
+            bubbleStart: "Il faut au moins :",
+            low: "..une minuscule",
+            upp: "..une majuscule",
+            hyp: "..tiret",
+            num: "..un chiffre",
+            alu: "..alfa-numérique uniquement",
+            spe: "..un caractère spéciaux",
+            mi3: "..3 caractères minimum",
+            mi8: "..8 caractères minimum",
+            email: "..heu incorrecte",
+            name: "..des caractères alphabétiques",
+            text: "..alfa-numérique et ponctuation",
+            empty: "..l'absence de vide"
+        },
+        style : "yes"
     }
     ,
     event : "keyup",
-    alertMsgStyle : "yes"
 }

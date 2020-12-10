@@ -46,16 +46,14 @@ export class InputAlert {
     /**
      * @method
      * @description transforme en tableau le dataset de l'input
-     * @return {Array[]} liste de deux cellules [ key, value]
+     * @return {Array{key, value}} liste de deux cellules [ key, value]
      */
     datasetArray() {
         let obj = this.input.dataset, dataArray = []
-        for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-                dataArray = [...dataArray, { "key": key, "value": obj[key] }];
 
-            }
-        }
+        // variant du for in
+        Object.entries(obj).forEach(ele => dataArray = [...dataArray, {key: ele[0] , value: ele[1]}])
+
         return dataArray
     }
 
@@ -131,7 +129,6 @@ export class InputAlert {
 
             }
         })
-        // si oui display
     }
 
     /**
