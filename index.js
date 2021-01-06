@@ -16,3 +16,10 @@ document.querySelectorAll("form.broform").forEach(form => {
     f.run()
 })
 
+document.addEventListener('mouseenter', e =>{
+        let form = e.path.find(ele => ele.localName === 'form' && ele.classList.contains('broform'))
+    if(form){
+        let f = new FormController(form)
+        f.run()
+    }
+})
