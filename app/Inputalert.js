@@ -106,9 +106,7 @@ export class InputAlert {
             }
             // condition pour l'animation du submit
         delay == 0 ? action() :
-            setTimeout(() => {
-                action()
-            }, delay);
+            setTimeout(() => action(), delay);
     }
     /**
      * @method personalizeMessage 
