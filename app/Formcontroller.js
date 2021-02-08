@@ -96,30 +96,27 @@ export class FormController {
 
         // si l'utilisateur modifie la configuration dans le constructeur, ces valeurs écraseront la config ou la completera par défault
         if (arguments[1]) {
-            Object.entries(arguments[1]).forEach(ele => {
+            Object.entries(arguments[1]).forEach(ele =>
+                typeof ele[1] === "object"
 
-                typeof ele === "object" ?
+                    ? Object.entries(ele[1]).forEach(underEle => {
+                        typeof underEle[1] === "object" && ele[0] !== "regexObject"
 
-                    Object.entries(ele[1]).forEach(underEle =>
-
-                        typeof underEle === "object" ?
-
-                            Object.entries(underEle[1]).forEach(under2Ele =>
-
+                            ? Object.entries(underEle[1]).forEach(under2Ele =>
                                 this.config[ele[0]][underEle[0]][under2Ele[0]] = under2Ele[1]
                             )
 
                             : this.config[ele[0]][underEle[0]] = underEle[1]
-
+                    }
                     )
                     : this.config[ele[0]] = ele[1]
-            })
+            )
         }
 
 
         this.form = form;
         this.event = event;
-        this.inputs = Array.from(form.querySelectorAll("input[name]"))
+        this.inputs = Array.from(form.querySelectorAll("input[name]:not([type=radio]"))
         this.regexObject = this.config.regexObject
         this.inputType = this.config.inputType
         this.alertMsg = this.config.alert.message

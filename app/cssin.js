@@ -21,6 +21,7 @@ export const formCss = [
     ,
     `[class^="alertbubble"] {
         border-radius: 5px;
+        pointer-events: none;
         position: absolute;
         padding: 0.5rem;
         margin: -0.5rem 0 0.5rem 0;
@@ -75,9 +76,9 @@ export const formCss = [
     }`
     ,
     `.checkSign-comeIn {
-        animation: comeIn 0.5s ease-in;}`
+        animation: checkSignComeIn 0.5s ease-in;}`
     ,
-    `@keyframes comeIn {
+    `@keyframes checkSignComeIn {
         from {
             transform: translate(-400%, -50%);
             opacity: 0;
